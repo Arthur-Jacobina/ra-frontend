@@ -40,7 +40,6 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
     "@tailwindcss/postcss": "4.1.12",
-    "@tanstack/devtools-vite": "^0.7.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
     "@types/katex": "^0.16.7",
