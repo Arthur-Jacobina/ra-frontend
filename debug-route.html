@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head><title>Debug Route</title></head>
+<body>
+<h1>Route Debug Test</h1>
+<button onclick="clearStorage()">Clear LocalStorage</button>
+<button onclick="testRoute()">Test /pdf/2304.08467</button>
+<div id="output"></div>
+
+<script>
+function clearStorage() {
+  localStorage.clear();
+  document.getElementById('output').innerHTML = '<p>LocalStorage cleared!</p>';
+  console.log('LocalStorage cleared');
+}
+
+function testRoute() {
+  console.log('Current localStorage:', localStorage);
+  window.location.href = 'http://localhost:4000/pdf/2304.08467';
+}
+
+// Show current state
+window.onload = function() {
+  const user = localStorage.getItem('user');
+  document.getElementById('output').innerHTML = `
+    <p>Current user: ${user ? 'LOGGED IN' : 'NOT LOGGED IN'}</p>
+    <p>User data: <pre>${user}</pre></p>
+  `;
+};
+</script>
+</body>
+</html>
