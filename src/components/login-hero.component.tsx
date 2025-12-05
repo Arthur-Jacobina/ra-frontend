@@ -12,11 +12,11 @@ export const LoginHero = () => {
           className="hidden sm:block absolute top-0 left-0 h-[100vh] w-[50vw] object-cover"
         />
         <Link to="/" className="z-1000 font-bold text-3xl text-neutral-xsoft">
-          Livus
+          Research Assistant
         </Link>
       </div>
       <H1 className="z-1000 text-neutral-xsoft text-center">
-        Healthcare made simple. <br /> AI-powered insights for better care.
+        AI-powered research assistant for academic papers.
       </H1>
     </div>
   );

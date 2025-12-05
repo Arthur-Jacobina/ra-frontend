@@ -1,39 +1,21 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import React, { useContext } from 'react';
+import React from 'react';
 import { BodySecondary } from '@/atomic/atm.typography/typography.component.style';
-import { Form, FormError, FormField, FormSubmit } from '@/atomic/obj.form/form.component';
+import { Form, FormField, FormSubmit } from '@/atomic/obj.form/form.component';
 import { LoginHero } from '@/components/login-hero.component';
-import { useNavigateToNextRoute } from '@/core/route/navigate-to-next-route.hook';
-import { useLogin } from '@/core/use-login';
-import { DrawerContext } from './__root';
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
 });
 
-const DEV_EMAIL = import.meta.env.VITE_DEV_EMAIL;
-const DEV_PASSWORD = import.meta.env.VITE_DEV_PASSWORD;
-
 function RouteComponent() {
-  const { openDrawer } = useContext(DrawerContext);
-  const { login, loading, data, error } = useLogin();
-  const { navigateToNextRoute } = useNavigateToNextRoute();
   const navigate = useNavigate();
-
-  const [email, setEmail] = React.useState(import.meta.env.DEV ? DEV_EMAIL : '');
-  const [password, setPassword] = React.useState(import.meta.env.DEV ? DEV_PASSWORD : '');
-
-  React.useEffect(() => {
-    if (data?.user) {
-      navigateToNextRoute();
-    }
-  }, [data, navigateToNextRoute]);
+  const [paperId, setPaperId] = React.useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    login(email, password);
-    if (!error) {
-      navigate({ to: '/ok' });
+    if (paperId.trim()) {
+      navigate({ to: '/pdf/$paperId', params: { paperId: paperId.trim() } });
     }
   };
 
@@ -44,39 +26,23 @@ function RouteComponent() {
       </div>
 
       <div className="flex min-h-screen w-full flex-col items-center justify-center px-md sm:w-1/2 sm:px-sm">
-        {/* Login Form */}
+        {/* Paper Search */}
         <div className="flex w-[30vw] flex-col items-center gap-md">
+
           <Form onSubmit={handleSubmit} className="max-w-[20vw]">
             <FormField
-              label="Email"
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="Your email address"
+              label="Paper ID"
+              type="text"
+              value={paperId}
+              onChange={e => setPaperId(e.target.value)}
+              placeholder="e.g., 2301.07041"
               required
             />
 
-            <FormField
-              label="Password"
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="Your password"
-              required
-            />
-
-            <FormError error={error} defaultMessage="Invalid email or password" />
-
-            <FormSubmit loading={loading}>Login</FormSubmit>
+            <FormSubmit loading={false}>View Paper</FormSubmit>
 
             <BodySecondary className="mt-md text-center font-light text-[#B6B6B6] text-sm">
-              Forgot your password? <span className="text-normal font-normal hover:underline">Reset it</span>
-            </BodySecondary>
-            <BodySecondary className="text-center font-light text-[#B6B6B6] text-sm">
-              Don't have an account?{' '}
-              <span className="text-normal font-normal hover:underline cursor-pointer" onClick={openDrawer}>
-                Register
-              </span>
+              Example: 2301.07041, 1706.03762, 2103.14030
             </BodySecondary>
           </Form>
         </div>
