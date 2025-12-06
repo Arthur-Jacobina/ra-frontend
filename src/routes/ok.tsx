@@ -18,18 +18,19 @@ type MessageState = {
   isTyping?: boolean;
 }
 
-const API_BASE_URL = 'http://localhost:8080/api/v1';
+const API_BASE_URL = 'https://research-app-549892930696.us-central1.run.app';
 
-async function sendChatMessage(message: string, userId: string, sessionId: string): Promise<string> {
+async function sendChatMessage(message: string, userId: string): Promise<string> {
   try {
     const response = await fetch(`${API_BASE_URL}/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-User-ID': userId,
-        'X-Session-ID': sessionId,
       },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ 
+        message,
+        user_id: userId,
+      }),
     });
 
     if (!response.ok) {
@@ -51,7 +52,6 @@ function RouteComponent() {
 
   const [messages, setMessages] = useState<MessageState[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const sessionIdRef = React.useRef<string>(`session-${Date.now()}`);
 
   // Protect this route - redirect to login if not authenticated
   // Only run once on mount to avoid interfering with other navigation
@@ -77,9 +77,8 @@ function RouteComponent() {
 
     try {
       const userId = user?.id || 'default-user';
-      const sessionId = sessionIdRef.current;
       
-      const response = await sendChatMessage(userMessage, userId, sessionId);
+      const response = await sendChatMessage(userMessage, userId);
 
       // Replace typing indicator with actual response
       setMessages(prev => {

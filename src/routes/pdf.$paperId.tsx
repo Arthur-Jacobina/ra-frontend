@@ -19,7 +19,7 @@ interface Message {
   isTyping?: boolean
 }
 
-const API_BASE_URL = 'https://research-app-hqwocch74a-uc.a.run.app'
+const API_BASE_URL = 'https://research-app-549892930696.us-central1.run.app'
 
 async function parseAndAddPaper(paperId: string): Promise<void> {
   try {
@@ -44,16 +44,17 @@ async function parseAndAddPaper(paperId: string): Promise<void> {
   }
 }
 
-async function sendChatMessage(message: string, userId: string, sessionId: string): Promise<string> {
+async function sendChatMessage(message: string, userId: string): Promise<string> {
   try {
     const response = await fetch(`${API_BASE_URL}/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-User-ID': userId,
-        'X-Session-ID': sessionId,
       },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ 
+        message,
+        user_id: userId,
+      }),
     })
 
     if (!response.ok) {
@@ -75,7 +76,6 @@ function RouteComponent() {
   const [messages, setMessages] = useState<Message[]>([])
   const [isAssistantTyping, setIsAssistantTyping] = useState(false)
   const [activeTab, setActiveTab] = useState<string>('chat')
-  const sessionIdRef = useRef<string>(`session-${Date.now()}`)
   const hasInitialized = useRef(false)
   const hasParsedPaper = useRef(false)
 
@@ -119,9 +119,8 @@ function RouteComponent() {
 
     try {
       const userId = user?.id || 'default-user'
-      const sessionId = sessionIdRef.current
       
-      const response = await sendChatMessage(message, userId, sessionId)
+      const response = await sendChatMessage(message, userId)
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
