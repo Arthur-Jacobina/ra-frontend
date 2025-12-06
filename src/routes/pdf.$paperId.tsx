@@ -21,28 +21,28 @@ interface Message {
 
 const API_BASE_URL = 'https://research-app-549892930696.us-central1.run.app'
 
-async function parseAndAddPaper(paperId: string): Promise<void> {
-  try {
-    const response = await fetch(`${API_BASE_URL}/paper/add`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ paper_id: paperId }),
-    })
+// async function parseAndAddPaper(paperId: string): Promise<void> {
+//   try {
+//     const response = await fetch(`${API_BASE_URL}/paper/add`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({ paper_id: paperId }),
+//     })
 
-    if (!response.ok) {
-      throw new Error(`API request failed: ${response.status}`)
-    }
+//     if (!response.ok) {
+//       throw new Error(`API request failed: ${response.status}`)
+//     }
 
-    const data = await response.json()
-    console.log('Paper parsed and added to database:', data)
-    return data
-  } catch (error) {
-    console.error('Error parsing and adding paper:', error)
-    throw error
-  }
-}
+//     const data = await response.json()
+//     console.log('Paper parsed and added to database:', data)
+//     return data
+//   } catch (error) {
+//     console.error('Error parsing and adding paper:', error)
+//     throw error
+//   }
+// }
 
 async function sendChatMessage(message: string, userId: string): Promise<string> {
   try {
@@ -77,27 +77,16 @@ function RouteComponent() {
   const [isAssistantTyping, setIsAssistantTyping] = useState(false)
   const [activeTab, setActiveTab] = useState<string>('chat')
   const hasInitialized = useRef(false)
-  const hasParsedPaper = useRef(false)
 
   // PDF URL from arXiv with viewer configuration
   // #toolbar=0 hides the toolbar, #navpanes=0 hides navigation pane, #scrollbar=0 hides scrollbar
   const pdfUrl = `https://arxiv.org/pdf/${paperId}.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH`
 
-  // Parse and add paper to database on mount
-  useEffect(() => {
-    if (!hasParsedPaper.current && paperId) {
-      hasParsedPaper.current = true
-      parseAndAddPaper(paperId).catch(error => {
-        console.error('Failed to parse and add paper:', error)
-      })
-    }
-  }, [paperId])
-
   // Send arXiv URL as first message on mount
   useEffect(() => {
     if (!hasInitialized.current && paperId) {
       hasInitialized.current = true
-      const arxivUrl = `https://arxiv.org/html/${paperId}`
+      const arxivUrl = `explain the paper ${paperId}`
       handleSendMessage(arxivUrl, false)
     }
   }, [paperId])
